@@ -10,7 +10,7 @@ const validateCommentForm = (values) => {
     } else if (values.author.length > 15) {
         errors.author = 'Must be 15 characters or less.';
     }
-    
+
     return errors;
 }
 export default validateCommentForm;
