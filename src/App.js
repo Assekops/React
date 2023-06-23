@@ -10,18 +10,17 @@ import CampsitesDirectoryPage from './pages/CampsitesDirectoryPage';
 import CampsiteDetailPage from './pages/CampsiteDetailPage';
 import { fetchCampsites } from './features/campsites/campsitesSlice';
 import { fetchPartners } from './features/partners/partnersSlice';
+import { fetchPromotions } from './features/promotions/promotionsSlice';
 import './App.css';
 
 
 function App() {
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(fetchCampsites());
-  // }, [dispatch]);
   useEffect(() => {
     dispatch(fetchCampsites());
     dispatch(fetchPartners());
-}, [dispatch]);
+    dispatch(fetchPromotions());
+  }, [dispatch]);
   return (
     <div className='App'>
       <Header />
