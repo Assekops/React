@@ -1,9 +1,44 @@
 
-import { createSlice } from '@reduxjs/toolkit';
-import { COMMENTS } from '../../app/shared/COMMENTS';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { baseUrl } from '../../app/shared/baseUrl';
+// import { COMMENTS } from '../../app/shared/COMMENTS';
+
+export const fetchComments = createAsyncThunk(
+    'comments/fetchComments',
+    async () => {
+        const response = await fetch(baseUrl + 'comments');
+        if (!response.ok) {
+            return Promise.reject('Unable to fetch, status: ' + response.status);
+        }
+        const data = await response.json();
+        return data;
+    }
+);
+//START---React week 5 Assignment Task 3
+export const postComment = createAsyncThunk(
+    'comments/postComment',
+    async (comment, { dispatch }) => {
+        const response = await fetch(
+            baseUrl + 'comments',
+            {
+                method: 'POST',
+                body: JSON.stringify(comment),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (!response.ok){
+                return Promise.reject(response.status);
+            }
+            const data = await response.json();
+            dispatch(addComment(data));
+    }
+);
+//END---React week 5 Assignment Task 3
 
 const initialState = {
-    commentsArray: COMMENTS
+    commentsArray: [],
+    isLoading: true,
+    errMsg:''
+    
 };
 
 const commentsSlice = createSlice({
@@ -18,6 +53,28 @@ const commentsSlice = createSlice({
                 ...action.payload
             };
             state.commentsArray.push(newComment);
+        }
+    },
+    extraReducers: {
+        [fetchComments.pending]: (state) => {
+            state.isLoading = true;
+        },
+        [fetchComments.fulfilled]: (state, action) => {
+            state.isLoading = false;
+            state.errMsg = '';
+            state.commentsArray = action.payload;
+        },
+        [fetchComments.rejected]: (state, action) => {
+            state.isLoading = false;
+            state.errMsg = action.error ? action.error.message : 'Fetch failed';
+        },
+        [postComment.rejected]: (state, action) => {
+            alert(
+                'your Comment could not be posted\nError:' +
+                (action.error? action.error.message: 'Fetch failed')
+            );
+            // state.isLoading = false;
+            // state.errMsg = action.error ? action.error.message : 'Fetch failed';
         }
     }
 });

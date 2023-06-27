@@ -50,13 +50,9 @@ export const selectAllPartners = (state) => {
     return state.partners.partnersArray;
 };
 
-// export const selectFeaturedPartner = (state) => {
-//     return state.partners.partnersArray.find((partner) => partner.featured);
-// };
-
 export const selectFeaturedPartner = (state) => {
     return {
-       featuredItem: state.partners.partnersArray.find(
+        featuredItem: state.partners.partnersArray.find(
             (partner) => partner.featured
         ),
         isLoading: state.partners.isLoading,
